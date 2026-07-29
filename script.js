@@ -23,6 +23,13 @@ window.addEventListener('keydown', (e) => {
     }
 });
 
+let gameOver = false;
+
+function dead() {
+    gameOver = true;
+    alert("Game Over!");
+    // Optionally, you can reset the game or reload the page here
+}
 let birdX = 50; 
 let birdY = 200;
 let velocity = 0;
@@ -38,6 +45,9 @@ function update() {
     birdY += velocity; // apply movement
     pipex -= 3; // move pipe to the left
 
+    if (gameOver) {
+        return; // stop the game loop if the player is dead
+    }
 
  ctx.clearRect(0, 0, canvas.width, canvas.height); // clear the canvas
 
@@ -54,8 +64,19 @@ function update() {
     
     requestAnimationFrame(update); // loop 
 
+    if (birdY + 40 > canvas.height || birdY < 0) {
+        gameOver = true; // kill the player if they hit the ground or go above the canvas
+    }
+    if (pipex < birdX + 55 && pipex + pipeWidth > birdX && (birdY < pipey - 150 || birdY + 40 > pipey)) {
+        gameOver = true; // kill the player if they hit the pipe
+    }
+    // if (pipex < birdX + 55 && pipex + pipeWidth >)
+    
+
 
 }
+
+
 
 planeImg.onload = () => {
     update(); // Start game loop
